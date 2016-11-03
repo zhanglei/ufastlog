@@ -2,10 +2,9 @@ package main
 
 import (
 	"bufio"
-	"io"
+	"fmt"
 	"log"
 	"net"
-	"os"
 )
 
 func main() {
@@ -22,12 +21,13 @@ func main() {
 		go func(c net.Conn) {
 			b := bufio.NewReader(c)
 			for {
-				line, err := b.ReadBytes('\n')
+				line, err := b.ReadString('\n')
 				if err != nil {
 					break
 				}
-				io.WriteString(os.Stdout, string(line))
-				io.Copy(c, c)
+				fmt.Println(line)
+				msg := []byte(line)
+				c.Write(msg)
 			}
 		}(conn)
 	}
