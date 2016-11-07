@@ -1,30 +1,34 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
-	"os"
-	"encoding/json"
 	"net/http"
-	"io/ioutil"
+	"os"
 	"strings"
-	"bytes"
-	"flag"
 )
 
 var listenAddr string
 var upstreamAddr string
+
 func init() {
 	flag.StringVar(&listenAddr, "l", ":1043", "Listen addr and port")
-	flag.StringVar(&upstreamAddr, "r", "127.0.0.1:9200", "Upstream addr and port")
+	flag.StringVar(&upstreamAddr, "r", "http://127.0.0.1:9200/", "Upstream addr and port")
 }
 
 func main() {
 	flag.Parse()
-	flag.Usage = func () {
+	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage of %s:", os.Args[0])
 		flag.PrintDefaults()
+	}
+	if listenAddr == "http://127.0.0.1:9200" {
+		fmt.Println(fmt.Sprintf("Seems you have not set listen and upsteam server, type %s -h to see usage!", os.Args[0]))
 	}
 	addr, err := net.ResolveUDPAddr("udp", listenAddr)
 	if err != nil {
@@ -42,12 +46,12 @@ func main() {
 	}
 }
 
-
 type ESLog struct {
 	RequestId string
-	Time string
-	Msg string
+	Time      string
+	Msg       string
 }
+
 func handleClient(l *net.UDPConn) {
 	buff := make([]byte, 655360)
 	for {
@@ -64,7 +68,7 @@ func handleClient(l *net.UDPConn) {
 func prepareMsg(buff []byte, n int) {
 	//msg length
 	fmt.Println(n)
-	if (n < 135) { //The minimal lenght of a log struct
+	if n < 135 { //The minimal lenght of a log struct
 		return
 	}
 	//0-31 logprefix
@@ -85,14 +89,14 @@ func prepareMsg(buff []byte, n int) {
 	fmt.Println("ok")
 	newMsg := &ESLog{
 		RequestId: requestid,
-		Time: timeLog,
-		Msg: msg,
+		Time:      timeLog,
+		Msg:       msg,
 	}
 	oMsg, err := json.Marshal(newMsg)
 	fmt.Println(string(oMsg))
 	if err != nil {
 		fmt.Println("Error when encoding as Json")
-		return;
+		return
 	} else {
 		putUrl := fmt.Sprintf("%s/%s/", logprefix, msgtype)
 		fmt.Println("putUrl:", putUrl)

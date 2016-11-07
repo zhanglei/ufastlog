@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e044b87-70a5-4f1d-aeaf-e77462a6961b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/php/test.php" afterPath="$PROJECT_DIR$/client/php/test.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
     </list>
     <ignored path="ufastlog.iws" />
@@ -28,8 +27,8 @@
       <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="486">
-              <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+            <state relative-caret-position="522">
+              <caret line="29" column="130" selection-start-line="29" selection-start-column="130" selection-end-line="29" selection-end-column="130" />
               <folding>
                 <element signature="e#14#121#0" expanded="true" />
               </folding>
@@ -709,12 +708,12 @@
       <updated>1478489140156</updated>
       <workItem from="1478489142050" duration="3876000" />
       <workItem from="1478493727343" duration="748000" />
-      <workItem from="1478501006520" duration="6041000" />
+      <workItem from="1478501006520" duration="7428000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10665000" />
+    <option name="totallyTimeSpent" value="12052000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="28" width="1920" height="1028" extended-state="0" />
@@ -991,8 +990,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="33" column="44" selection-start-line="33" selection-start-column="44" selection-end-line="33" selection-end-column="44" />
+        <state relative-caret-position="522">
+          <caret line="29" column="130" selection-start-line="29" selection-start-column="130" selection-end-line="29" selection-end-column="130" />
           <folding>
             <element signature="e#14#121#0" expanded="true" />
           </folding>
