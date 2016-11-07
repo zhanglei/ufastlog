@@ -20,7 +20,7 @@ func main() {
 	}
 	defer l.Close()
 	for {
-		go handleClient(l)
+		handleClient(l)
 	}
 }
 
