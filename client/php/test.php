@@ -1,4 +1,5 @@
 <?php
+$startime = microtime(true);
 class ufastlog
 {
     public static $logprefix;
@@ -14,17 +15,20 @@ class ufastlog
     }
     public static function debug($msg)
     {
+        return static::send('debug', $msg);
     }
     public static function info($msg)
     {
-        $msg = pack("a64a64a*", static::$logprefix, static::$logrequestid, $msg);
-        static::send($msg);
+        return static::send('info', $msg);
     }
     public static function error($msg)
     {
+        return static::send('error', $msg);
     }
-    public static function send($msg)
+    public static function send($msgtype, $msg)
     {
+        $time = date('Y-m-d H:i:s');
+        $msg = pack("a64a64a20a5a*", static::$logprefix, static::$logrequestid, $time, $msgtype, $msg);
         $fp = null;
         try {
             $fp = fsockopen(static::$upstreamAddr, static::$upstreamPort, $errno, $errmsg);
@@ -32,14 +36,8 @@ class ufastlog
                 echo "ERROR: " . $errno . ": " . $errmsg . PHP_EOL;
                 return "";
             }
-            var_dump($fp);
-            echo "Connect upstream success";
             fwrite($fp, $msg . "\n");
-            fwrite($fp, PHP_EOL);
-            $return  = fread($fp, 32);
-            var_dump($return);
-            echo $return;
-            return $return;
+            return 'ok';
         } catch (\Exception $e) {
             echo "Something err";
         } finally {
@@ -47,7 +45,6 @@ class ufastlog
                 fclose($fp);
             }
         }
-
         return '';
         //var_dump($msg);
         //var_dump($msgArr = unpack("a64logprefix/a64logrequestid/a*msg", $msg));
@@ -55,6 +52,9 @@ class ufastlog
 }
 
 ufastlog::setConfig();
-ufastlog::info('hello');
+var_dump(ufastlog::info('hello'));
 ufastlog::setConfig(['prefix' => 'log_2016_11_03', 'requestid' => 'DK023dxidfjadkfjasdfisafj']);
-ufastlog::info('A large amount scale log');
+var_dump(ufastlog::info('A large amount scale log'));
+$endtime = microtime(true);
+$difftime = $endtime - $startime;
+echo $difftime*1000 . "ms";
