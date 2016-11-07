@@ -5,11 +5,9 @@ class ufastlog
     public static $logprefix;
     public static $logrequestid;
     public static $upstreamAddr;
-    public static $upstreamPort;
     public static function setConfig($config = [])
     {
-        static::$upstreamAddr = (array_key_exists('upstreamaddr', $config)) ? $config['upstreamaddr'] : 'udp://127.0.0.1';
-        static::$upstreamPort = (array_key_exists('upstreamport', $config)) ? $config['upstreamport'] : '1043';
+        static::$upstreamAddr = (array_key_exists('upstreamaddr', $config)) ? $config['upstreamaddr'] : 'udp://127.0.0.1:1043';
         static::$logprefix = (array_key_exists('prefix', $config)) ? $config['prefix'] : 'log_2016_11';
         static::$logrequestid = (array_key_exists('requestid', $config)) ? $config['requestid'] : str_replace(".", "", microtime(true)) . rand(1000, 9999);
     }
@@ -31,7 +29,7 @@ class ufastlog
         $msg = pack("a64a64a20a5a*", static::$logprefix, static::$logrequestid, $time, $msgtype, $msg);
         $fp = null;
         try {
-            $fp = fsockopen(static::$upstreamAddr, static::$upstreamPort, $errno, $errmsg);
+            $fp = stream_socket_client(static::$upstreamAddr, $errno, $errmsg, 1, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
             if (!$fp) {
                 echo "ERROR: " . $errno . ": " . $errmsg . PHP_EOL;
                 return "";
