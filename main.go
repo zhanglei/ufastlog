@@ -1,34 +1,39 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"net"
+	"os"
 )
 
 func main() {
-	l, err := net.Listen("tcp", ":2000")
+	addr, err := net.ResolveUDPAddr("udp", ":1043")
+	if err != nil {
+		fmt.Println("Can't resolv address: ", err)
+		os.Exit(1)
+	}
+	l, err := net.ListenUDP("udp", addr)
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
 	defer l.Close()
 	for {
-		conn, err := l.Accept()
+		handleClient(l)
+	}
+}
+
+func handleClient(l *net.UDPConn) {
+	buff := make([]byte, 655360)
+	for {
+		n, rAddr, err := l.ReadFromUDP(buff)
 		if err != nil {
 			log.Fatal(err)
+		} else {
+			fmt.Println(string(buff[0:n]))
+			fmt.Println("ok")
+			l.WriteToUDP([]byte("ok\n"), rAddr)
 		}
-		go func(c net.Conn) {
-			b := bufio.NewReader(c)
-			for {
-				line, err := b.ReadString('\n')
-				if err != nil {
-					break
-				}
-				fmt.Println(line)
-				msg := []byte(line)
-				c.Write(msg)
-			}
-		}(conn)
 	}
 }
