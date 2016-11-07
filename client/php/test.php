@@ -25,8 +25,8 @@ class ufastlog
     }
     public static function send($msgtype, $msg)
     {
-        $time = date('Y-m-d H:i:s');
-        $msg = pack("a64a64a20a5a*", static::$logprefix, static::$logrequestid, $time, $msgtype, $msg);
+        $time = date('c');
+        $msg = pack("a32a64a32a5a*", static::$logprefix, static::$logrequestid, $time, $msgtype, $msg);
         $fp = null;
         try {
             $fp = stream_socket_client(static::$upstreamAddr, $errno, $errmsg, 1, STREAM_CLIENT_CONNECT | STREAM_CLIENT_ASYNC_CONNECT);
